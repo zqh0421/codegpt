@@ -1,3 +1,21 @@
+::-webkit-scrollbar {
+  width:5px;
+  height:5px;
+  position:absolute;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color:#1890ff
+}
+
+::-webkit-scrollbar-track {
+  background-color:#ddd
+}
+
+#root {
+    height: 100vh;
+}
+
 .App {
   text-align: center;
 }
@@ -12,7 +30,6 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
-
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

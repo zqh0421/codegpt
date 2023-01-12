@@ -1,3 +1,20 @@
+# 如果要新建react+ts项目
+npm install -g create-react-app
+
+create-react-app my-app --template typescript
+
+cd my-app
+
+# 运行前
+npm install
+
+npm install antd
+
+npm install react-router-dom
+
+# 运行
+npm start
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
