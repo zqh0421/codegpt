@@ -11,10 +11,9 @@ interface FormValues {
 
 const Login: React.FC = () => {
   const navigate = useNavigate()
-  const onFinish = (key : string) => {
-    // localStorage.setItem("token",JSON.stringify(key)) // 保存API-key
-    // navigate('/') // 提交后跳转页面
-    verify(key) // 用来测试跑通的函数
+  const onFinish = (values : FormValues) => {
+    localStorage.setItem("token",JSON.stringify(values)) // 保存API-key
+    navigate('/') // 提交后跳转页面
   }
 
   return (
@@ -24,7 +23,7 @@ const Login: React.FC = () => {
         <Form // 表单
           name="normal_login"
           className="login-form"
-          onFinish={(val:FormValues) => onFinish(val.api_key)}
+          onFinish={(val:FormValues) => onFinish(val)}
         >
           <Form.Item
             name="api_key"

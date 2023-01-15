@@ -1,0 +1,28 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: pink;
+  height: 60px;
+  line-height: 30px;
+}
+
+.right {
+  float: right;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  
+}
+
+.right p {
+  margin-right: 40px;
+}
+
+.right .logOut {
+  color: grey
+}
+
+.right .logOut:hover {
+  color: seagreen;
+}
