@@ -43,16 +43,6 @@ const Login: React.FC = () => {
               SUBMIT
             </Button>
           </Form.Item>
-          <Form.Item>
-            <TextArea
-                rows={4}
-                placeholder="Please write or copy your code here."
-                style={{
-                  height: 120,
-                  resize: 'none'
-                }}
-              />
-          </Form.Item>
         </Form>
       </div>
     </div>
