@@ -38,12 +38,26 @@ export default function Home() {
     })
   }
   return (
-    <div>
-      <TopHeader/>
-      <ConfigForm ref={formRef}/>
-      <PromptEditor {...{setPrompt}} />
-      <Display result={result} />
-      <Button onClick={submit}>Submit</Button>
+    <div className="homePage">
+      <TopHeader />
+      <div className="configForm">
+        <div className="subConfigForm">
+          <ConfigForm ref={formRef}/>
+        </div>
+      </div>
+      <PromptEditor result={result}/>
+      <Display />
+      <Button onclick={submit}>Submit</Button>
     </div>
   )
+  
+//   return (
+//     <div>
+//       <TopHeader/>
+//       <ConfigForm ref={formRef}/>
+//       <PromptEditor {...{setPrompt}} />
+//       <Display result={result} />
+//       <Button onClick={submit}>Submit</Button>
+//     </div>
+//   )
 }
