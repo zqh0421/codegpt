@@ -3,9 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Form, Button, Input } from 'antd'
 import { KeyOutlined } from '@ant-design/icons'
 import './Login.css'
-import { verify } from '../../api/verify'
-
-const { TextArea } = Input
+// import { verify } from '../../api/verify'
 
 interface FormValues {
   api_key: string
