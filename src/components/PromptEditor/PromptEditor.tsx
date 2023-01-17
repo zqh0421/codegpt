@@ -5,20 +5,29 @@ import { Input } from 'antd'
 
 const { TextArea } = Input
 
-const CodeEditor : React.FC = () => {
+interface Props {
+  setPrompt: Function;
+}
+
+const PromptEditor: React.FC<Props> = (Props) => {
+  const changePrompt = (value : string) => {
+    Props.setPrompt(value)
+  }
   
   return (
     <>
       <TextArea
+        defaultValue={"test."}
         rows={4}
         placeholder="Please write or copy your code here."
         style={{
           height: 120,
           resize: 'none'
         }}
+        onChange={info => changePrompt(info.target.value)}
       />
     </>
   )
 }
 
-export default CodeEditor
+export default PromptEditor

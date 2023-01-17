@@ -1,18 +1,46 @@
 // 这里是参数配置表单
 import React from 'react';
-import { Form,  Select, Slider, InputNumber, Col, Row } from "antd";
+import { Form,  Select, Slider, Button } from "antd";
+import type { FormInstance } from 'antd/es/form'
+
 const { Option } = Select
 
-const ConfigForm : React.FC = () => {
+const ConfigForm = React.forwardRef<FormInstance>((props, ref) => {
   const modelOptions = [
     "text-davinci-003",
     "text-davinci-002",
   ]
+  const commandOptions = [
+    "Ask CodeGPT",
+    "Explain",
+    "Refactor",
+    "Optimize",
+    "Find Problems",
+    "Documentation",
+  ]
   return (
     <Form
       layout="vertical"
-      disabled
+      ref={ref}
+      initialValues={{
+        "command": commandOptions[0],
+        "model": modelOptions[0],
+        "temperature": 0.7,
+        "maximum_length": 256,
+      }}
     >
+      <Form.Item
+        name="command"
+        label="Command"
+      >
+        <Select>
+          {
+            commandOptions.map(item => 
+              <Option value={item} key={item}>{item}</Option>
+            )
+          }
+        </Select>
+      </Form.Item>
       <Form.Item
         name="model"
         label="Model"
@@ -26,7 +54,7 @@ const ConfigForm : React.FC = () => {
         </Select>
       </Form.Item>
       <Form.Item
-        name="Temperature"
+        name="temperature"
         label="Temperature"
       >
         <Slider
@@ -36,7 +64,7 @@ const ConfigForm : React.FC = () => {
         />
       </Form.Item>
       <Form.Item
-        name="Maximum length"
+        name="maximum_length"
         label="Maximum length"
       >
         <Slider
@@ -46,6 +74,6 @@ const ConfigForm : React.FC = () => {
       </Form.Item>
     </Form>
   )
-}
+})
 
 export default ConfigForm

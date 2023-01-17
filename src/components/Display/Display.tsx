@@ -4,12 +4,17 @@ import { Input } from 'antd'
 
 const { TextArea } = Input
 
-const Display : React.FC = () => {
+interface Props {
+  result: string
+}
+
+const Display : React.FC<Props> = (Props) => {
   return (
     <>
       <TextArea
         rows={4}
-        placeholder="After your submit, the result will display here."
+        value={Props.result}
+        placeholder="After your submit, the result will be displayed here."
         style={{
           height: 120,
           resize: 'none'

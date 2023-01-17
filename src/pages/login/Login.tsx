@@ -5,6 +5,8 @@ import { KeyOutlined } from '@ant-design/icons'
 import './Login.css'
 import { verify } from '../../api/verify'
 
+const { TextArea } = Input
+
 interface FormValues {
   api_key: string
 }
@@ -40,6 +42,16 @@ const Login: React.FC = () => {
             <Button type="primary" htmlType="submit" className="login-form-button" size='large'>
               SUBMIT
             </Button>
+          </Form.Item>
+          <Form.Item>
+            <TextArea
+                rows={4}
+                placeholder="Please write or copy your code here."
+                style={{
+                  height: 120,
+                  resize: 'none'
+                }}
+              />
           </Form.Item>
         </Form>
       </div>
