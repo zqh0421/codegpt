@@ -1,6 +1,6 @@
 // 这里是参数配置表单
 import React from 'react';
-import { Form,  Select, Slider, Button } from "antd";
+import { Form, Select, Slider } from "antd";
 import type { FormInstance } from 'antd/es/form'
 
 const { Option } = Select

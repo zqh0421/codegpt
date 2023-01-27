@@ -6,11 +6,13 @@ import { Input } from 'antd'
 const { TextArea } = Input
 
 interface Props {
+  prompt: string,
   setPrompt: Function;
 }
 
 const PromptEditor: React.FC<Props> = (Props) => {
   const changePrompt = (value : string) => {
+    console.trace()
     Props.setPrompt(value)
   }
   const defaultValue : string = ("var fibonacci = function(){\n"+
@@ -30,7 +32,6 @@ const PromptEditor: React.FC<Props> = (Props) => {
     Props.setPrompt(defaultValue)
   }, [])
   
-  
   return (
     <>
       <TextArea
@@ -41,6 +42,7 @@ const PromptEditor: React.FC<Props> = (Props) => {
           height: 120,
           resize: 'none'
         }}
+        value={Props.prompt}
         onChange={info => changePrompt(info.target.value)}
       />
     </>
