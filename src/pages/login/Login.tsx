@@ -15,7 +15,6 @@ const Login: React.FC = () => {
     localStorage.setItem("token",JSON.stringify(values)) // 保存API-key
     navigate('/') // 提交后跳转页面
   }
-  console.log("Here is an API-KEY for test: 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")
   return (
     <div style={{ background: 'rgb(35, 39, 65)', height: "100%" }}>
       <div className="formContainer">
