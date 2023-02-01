@@ -36,10 +36,11 @@ const PromptEditor: React.FC<Props> = (Props) => {
     <>
       <TextArea
         defaultValue={defaultValue}
-        rows={4}
+        maxLength={4000}
+        autoSize
         placeholder="Please write or copy your code here."
         style={{
-          height: 120,
+          height: 270,
           resize: 'none'
         }}
         value={Props.prompt}

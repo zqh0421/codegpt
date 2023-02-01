@@ -40,6 +40,10 @@ const Login: React.FC = () => {
             <Button type="primary" htmlType="submit" className="login-form-button" size='large'>
               SUBMIT
             </Button>
+            {/* Learn more about ChatGPT.
+      Learn more about OpenAI.
+      How can I get API-KEY?
+      Without an available API-KEY, you can enter anything and submit to visit the home page but cannot access OpenAI API. */}
           </Form.Item>
         </Form>
       </div>

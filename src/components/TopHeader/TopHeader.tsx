@@ -33,6 +33,9 @@ const TopHeader: React.FC = () => {
   return (
     <>
       <Header className="header">
+      <div className="left">
+          <p className='topTitle'>CodeGPT</p>
+        </div>
         <div className="right">
           <p className='info'>Welcome! The last 4 digits of of your API-KEY: {currentToken.api_key.substring(currentToken.api_key.length-4)}</p>
           <p className='logOut' onClick={onLogOut}>Log Out</p>

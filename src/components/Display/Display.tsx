@@ -16,9 +16,10 @@ const Display : React.FC<Props> = (Props) => {
         value={Props.result}
         placeholder="After your submit, the result will be displayed here."
         style={{
-          height: 120,
+          height: 140,
           resize: 'none'
         }}
+        autoSize
       />
     </>
   )

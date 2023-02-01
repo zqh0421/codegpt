@@ -1,17 +1,59 @@
 .homePage {
-    width: 100%;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.main {
+  display: flex;
+  flex-grow: 1;
+}
+
+.leftContainer, .rightContainer {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.leftContainer {
+  flex: 5;
+}
+
+.rightContainer {
+  padding-left: 0;
+}
+
+.mainPanel {
+  display: flex;
+  justify-content: space-between;
+}
+
+.buttonPanel > * {
+  margin-right: 20px;
+}
+
+@media (max-width: 800px) {
+  .rightContainer {
+    display: none;
+  }
+  .leftContainer .editors {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    padding: 10px;
+  }
+  .editors > *:first-child {
+    margin-bottom: 20px;
+  }
 }
-
-.configForm {
-    width: 80%;
-}
-
-.subConfigForm {
-    width: 50%;
+@media (min-width: 800px) {
+  .leftContainer .editors {
+    display: flex;
+    flex-direction: row;
+  }
+  .editors > *:first-child {
+    margin-right: 20px;
+  }
+  .rightContainer {
+    flex-basis: 180px;
+  }
 }
