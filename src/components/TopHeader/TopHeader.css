@@ -1,0 +1,54 @@
+@media (max-width: 800px) {
+  .header .info {
+    display: none;
+  }
+}
+@media (max-width: 300px) {
+  .header .left {
+    display: none;
+  }
+}
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  height: 60px;
+  line-height: 30px;
+  background-color: #fff;
+  border-bottom: 1px solid #ececf1;
+}
+.left {
+  float: left;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+.left p {
+  margin-left: 40px;
+}
+
+.left .topTitle {
+  font-weight: bold;
+}
+.right {
+  float: right;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+}
+
+.right p {
+  margin-right: 40px;
+}
+
+.right .info {
+  color: rgba(0, 0, 0, 0.88);
+}
+
+.right .logOut {
+  color: #ddd;
+}
+
+.right .logOut:hover {
+  color: #1890ff;
+}
