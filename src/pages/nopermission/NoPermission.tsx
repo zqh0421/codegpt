@@ -6,7 +6,7 @@ export default function NoPermission() {
     if (localStorage && localStorage.token) {
       navigate('/')
     } else {
-      navigate('login')
+      navigate('/login')
     }
   }, [])
 

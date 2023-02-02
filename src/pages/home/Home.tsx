@@ -12,7 +12,7 @@ import getCode from '../../api/getCode'
 import { IGetCodeProps } from "../../utils/interfaces";
 import { GithubOutlined } from '@ant-design/icons'
 import './Home.css'
-import MonacoEditor from '../../components/MonacoEditor/MonacoEditor'
+import Editor from '../../components/MonacoEditor/MonacoEdtior'
 const { Option } = Select
 
 export default function Home() {
@@ -20,6 +20,7 @@ export default function Home() {
     api_key: ""
   })
   const [prompt, setPrompt] = useState<string>("")
+  const [lang, setLang] = useState<string>("")
   const [result, setResult] = useState<string>("")
   const [submitBtn, setSubmitBtn] = useState<string>("Submit")
   const [submitFunc, setSubmitFunc] = useState<boolean>(false)
@@ -32,14 +33,17 @@ export default function Home() {
       setCurrentToken(JSON.parse(localStorage.token))
     }
     else {
-      navigate('/login')
+      // navigate('/login')
     }
   }, [])
 
-  const langOptions = [
-    'Plain Text',
-    'Go',
-  ]
+  const langOptions = [{
+    value: "plaintext",
+    label: 'Plain Text',
+  }, {
+    value: "go",
+    label: "Go",
+  }]
 
   const submit = () => {
     formRef.current?.validateFields().then((val: any) => {
@@ -72,7 +76,8 @@ export default function Home() {
   }
 
   const handleLangChange = (value: string) => {
-    if (value === langOptions[0]) {
+    setLang(value)
+    if (value === langOptions[0].value) {
       setSubmitFunc(false)
       setSubmitBtn("Submit")
     } else {
@@ -83,18 +88,13 @@ export default function Home() {
   const submitSelectedFunc = () => {
     console.log('click')
   }
-  const defaultCode = `{
-    "$schema": "http://json.schemastore.org/coffeelint",
-    "line_endings": "unix"
-  }`;
-  return (<MonacoEditor defaultCode={defaultCode}/>)
   return (
     localStorage && localStorage.token && <div className='homePage'>
       <TopHeader/>
       <div className="main">
         <div className="leftContainer">
           <div className="editors">
-            <PromptEditor {...{setPrompt}} prompt={prompt} />
+            <PromptEditor {...{setPrompt}} prompt={prompt} lang={lang} />
             <Display result={result} />
           </div>
           <div className="mainPanel">
@@ -105,16 +105,11 @@ export default function Home() {
             </div>
             <div className="langPanel">
               <Select
-                defaultValue={langOptions[0]}
+                defaultValue={langOptions[0].value}
                 onChange={handleLangChange}
                 className="selectLang"
-              >
-                {
-                  langOptions.map(item => 
-                    <Option value={item} key={item}>{item}</Option>
-                  )
-                }
-              </Select>
+                options={langOptions}
+              />
             </div>
           </div>
           
