@@ -12,7 +12,6 @@ import getCode from '../../api/getCode'
 import { IGetCodeProps } from "../../utils/interfaces";
 import { GithubOutlined } from '@ant-design/icons'
 import './Home.css'
-import Editor from '../../components/MonacoEditor/MonacoEdtior'
 const { Option } = Select
 
 export default function Home() {
