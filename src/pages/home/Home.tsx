@@ -103,6 +103,7 @@ export default function Home() {
               <Select
                 defaultValue={langOptions[0]}
                 onChange={handleLangChange}
+                className="selectLang"
               >
                 {
                   langOptions.map(item => 

@@ -37,14 +37,14 @@ const PromptEditor: React.FC<Props> = (Props) => {
       <TextArea
         defaultValue={defaultValue}
         maxLength={4000}
-        autoSize
         placeholder="Please write or copy your code here."
         style={{
-          height: 270,
+          height: 500,
           resize: 'none'
         }}
         value={Props.prompt}
         onChange={info => changePrompt(info.target.value)}
+
       />
     </>
   )

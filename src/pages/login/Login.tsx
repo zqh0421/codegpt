@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Form, Button, Input } from 'antd'
-import { KeyOutlined } from '@ant-design/icons'
+import { Form, Button, Input, Popover } from 'antd'
+import { KeyOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import './Login.css'
 // import { verify } from '../../api/verify'
 
@@ -23,7 +23,7 @@ const Login: React.FC = () => {
   return (
     <div style={{ background: 'rgb(35, 39, 65)', height: "100%" }}>
       <div className="formContainer">
-        <div className="login-title">This is a test module.</div>
+        <div className="login-title">Welcome to CodeGPT (test)</div>
         <Form // 表单
           name="normal_login"
           className="login-form"
@@ -32,13 +32,32 @@ const Login: React.FC = () => {
           <Form.Item
             name="api_key"
             rules={[{ required: true, message: 'Please input your API-key!' }]}
+            className='login-form'
           >
             <Input
               prefix={<KeyOutlined className="site-form-item-icon" />}
+              suffix={
+                <Popover
+                  title={
+                    <div>Learn more about API-KEY: <a href="https://platform.openai.com/docs/api-reference/authentication." target="_blank">CLICK HERE</a>.</div>
+                  }
+                  content={
+                    <div>
+                      <div>You can submit anything if you just want</div>
+                      <div>to visit the website without using its</div>
+                      <div>functions.</div>
+                    </div>
+                  }
+                >
+                  <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                </Popover>
+              }
               size="large"
               type="password"
               placeholder="API-key"
+              className='login-form-input'
             />
+            
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" className="login-form-button" size='large'>
@@ -50,6 +69,9 @@ const Login: React.FC = () => {
       Without an available API-KEY, you can enter anything and submit to visit the home page but cannot access OpenAI API. */}
           </Form.Item>
         </Form>
+      </div>
+      <div className="footer">
+        <p><a href='https://openai.com/' target="_blank">OpenAI</a> | <a href='https://openai.com/blog/chatgpt/' target="_blank">ChatGPT</a></p>
       </div>
     </div>
   )

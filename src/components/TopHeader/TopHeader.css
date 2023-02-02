@@ -23,13 +23,14 @@
   display: flex;
   justify-content: center;
 }
-.left p {
-  margin-left: 40px;
-}
 
 .left .topTitle {
+  margin-left: 40px;
   font-weight: bold;
+  line-height: 20px;
+  font-size: 20px;
 }
+
 .right {
   float: right;
   display: flex;
