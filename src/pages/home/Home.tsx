@@ -12,7 +12,7 @@ import getCode from '../../api/getCode'
 import { IGetCodeProps } from "../../utils/interfaces";
 import { GithubOutlined } from '@ant-design/icons'
 import './Home.css'
-
+import MonacoEditor from '../../components/MonacoEditor/MonacoEditor'
 const { Option } = Select
 
 export default function Home() {
@@ -83,7 +83,11 @@ export default function Home() {
   const submitSelectedFunc = () => {
     console.log('click')
   }
-
+  const defaultCode = `{
+    "$schema": "http://json.schemastore.org/coffeelint",
+    "line_endings": "unix"
+  }`;
+  return (<MonacoEditor defaultCode={defaultCode}/>)
   return (
     localStorage && localStorage.token && <div className='homePage'>
       <TopHeader/>
