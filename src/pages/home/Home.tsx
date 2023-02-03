@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from 'react'
-import { useNavigate } from 'react-router'
 import { Button, Modal,Select } from 'antd'
 import type { FormInstance } from 'antd/es/form'
 import TopHeader from '../../components/TopHeader/TopHeader'
@@ -14,6 +13,12 @@ import { GithubOutlined } from '@ant-design/icons'
 import './Home.css'
 const { Option } = Select
 
+interface IDefaultValues {
+  plaintext: string,
+  go: string,
+  typescript: string,
+}
+
 export default function Home() {
   const [currentToken, setCurrentToken] = useState({
     api_key: ""
@@ -26,23 +31,57 @@ export default function Home() {
   const [isEditVisible, setIsEditVisible] = useState<boolean>(false)
   const formRef = useRef<FormInstance>(null)
   const getCodeFormRef = useRef<FormInstance>(null)
-  let navigate = useNavigate()
   useEffect(() => {
     if (localStorage && localStorage.token) {
       setCurrentToken(JSON.parse(localStorage.token))
-    }
-    else {
-      // navigate('/login')
+      setPrompt(defaultValues[langOptions[0].value as keyof typeof defaultValues])
     }
   }, [])
 
+  
+
   const langOptions = [{
     value: "plaintext",
-    label: 'Plain Text',
+    label: 'Plain Text'
   }, {
     value: "go",
-    label: "Go",
+    label: "Go"
+  }, {
+    value: "typescript",
+    label: "TypeScript"
   }]
+
+  const defaultValues: IDefaultValues = {
+    "plaintext": (
+      'Print "Hello World" using TypeScript and Go respectilvely.'
+    ),"go": (
+      'package main\n\n'+
+      'import "fmt"\n\n'+
+      'func fibonacci(n int) int {\n'+
+      '    if n < 2 {\n'+
+      '        return n\n'+
+      '    }\n'+
+      '    return fibonacci(n-2) + fibonacci(n-1)\n'+
+      '}\n\n'+
+      'func main() {\n'+
+      '    var i int\n'+
+      '    for i = 0; i < 10; i++ {\n'+
+      '        fmt.Printf("%d\t", fibonacci(i))\n'+
+      '    }\n'+
+      '}'
+    ),
+    "typescript": (
+      'const fibonacci = (n: number) => {\n'+
+      '  if (n < 2) {\n'+
+      '    return n\n'+
+      '  }\n'+
+      '  return fibonacci(n-2) + fibonacci(n-1)\n'+
+      '}\n\n'+
+      'for (let i: number = 0; i < 10; i++) {\n'+
+      '  console.log(fibonacci(i))\n'+
+      '}'
+    )
+  }
 
   const submit = () => {
     formRef.current?.validateFields().then((val: any) => {
@@ -76,6 +115,7 @@ export default function Home() {
 
   const handleLangChange = (value: string) => {
     setLang(value)
+    setPrompt(defaultValues[value as keyof typeof defaultValues])
     if (value === langOptions[0].value) {
       setSubmitFunc(false)
       setSubmitBtn("Submit")
@@ -94,7 +134,7 @@ export default function Home() {
         <div className="leftContainer">
           <div className="editors">
             <PromptEditor {...{setPrompt}} prompt={prompt} lang={lang} />
-            <Display result={result} />
+            <Display result={result} />            
           </div>
           <div className="mainPanel">
             <div className="buttonPanel">
@@ -108,6 +148,7 @@ export default function Home() {
                 onChange={handleLangChange}
                 className="selectLang"
                 options={langOptions}
+                style={{ width: 120 }}
               />
             </div>
           </div>

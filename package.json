@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@monaco-editor/react": "^4.4.6",
     "antd": "^5.1.7",
     "js-base64": "^3.7.4",
     "monaco-editor": "^0.34.1",

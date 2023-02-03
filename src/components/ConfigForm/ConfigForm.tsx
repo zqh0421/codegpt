@@ -2,7 +2,7 @@
 import React from 'react';
 import { Form, Select, Slider } from "antd";
 import type { FormInstance } from 'antd/es/form'
-
+import './ConfigForm.css'
 const { Option } = Select
 
 const ConfigForm = React.forwardRef<FormInstance>((props, ref) => {
@@ -28,6 +28,7 @@ const ConfigForm = React.forwardRef<FormInstance>((props, ref) => {
         "temperature": 0.7,
         "maximum_length": 256,
       }}
+      className="configForm"
     >
       <Form.Item
         name="command"

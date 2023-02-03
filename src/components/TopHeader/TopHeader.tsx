@@ -1,6 +1,5 @@
 import { Layout, Modal, message } from 'antd';
 import { useState } from 'react';
-import { useNavigate } from "react-router"
 import './TopHeader.css'
 
 const { Header } = Layout;
@@ -9,7 +8,6 @@ const TopHeader: React.FC = () => {
   const [currentToken, setCurrentToken] = useState(JSON.parse(localStorage.token))
   const [open, setOpen] = useState(false)
   const [confirmLoading, setConfirmLoading] = useState(false)
-  let navigate = useNavigate()
 
   const handleOk = () => {
     setConfirmLoading(true)
@@ -17,9 +15,8 @@ const TopHeader: React.FC = () => {
       setCurrentToken(null)
       localStorage.removeItem("token")
       message.success("You have successfully logged out.")
-      navigate('/login')
-      setConfirmLoading(false)
-    }, 2000)
+      window.location.reload()
+    }, 1000)
   }
   
   const handleCancel = () => {

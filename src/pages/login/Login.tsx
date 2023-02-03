@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React from 'react'
 import { Form, Button, Input, Popover } from 'antd'
 import { KeyOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import './Login.css'
@@ -10,16 +9,10 @@ interface FormValues {
 }
 
 const Login: React.FC = () => {
-  const navigate = useNavigate()
   const onFinish = (values : FormValues) => {
     localStorage.setItem("token",JSON.stringify(values)) // 保存API-key
-    navigate('/') // 提交后跳转页面
+    window.location.reload()
   }
-  useEffect(() => {
-    if (localStorage && localStorage.token) {
-      navigate('/')
-    }
-  }, [])
   return (
     <div style={{ background: 'rgb(35, 39, 65)', height: "100%" }}>
       <div className="formContainer">
