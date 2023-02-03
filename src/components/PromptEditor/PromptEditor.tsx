@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-import { Input } from 'antd'
+import React, { useEffect, useState } from 'react'
 import MonacoEditor, { EditorDidMount } from "react-monaco-editor";
 import * as monaco from 'monaco-editor';
 import { MonacoServices } from "monaco-languageclient";
@@ -27,16 +26,15 @@ self.MonacoEnvironment = {
   }
 }
 
-const { TextArea } = Input
-
-interface Props {
+interface IPromptEditorProps {
   prompt: string,
   setPrompt: Function;
   lang: string,
+  socket: any
 }
 
-
-const PromptEditor: React.FC<Props> = (Props) => {
+const PromptEditor: React.FC<IPromptEditorProps> = (Props) => {
+  const { prompt, setPrompt, lang, socket } = Props;
   const MONACO_OPTIONS: monaco.editor.IEditorOptions = {
     autoIndent: "full",
     automaticLayout: true,
@@ -62,6 +60,18 @@ const PromptEditor: React.FC<Props> = (Props) => {
     },
   };
   
+  const sendSocket = () => {
+    if (lang == 'go') {
+      socket.emit('golang-lsp', {
+        prompt, lang
+      })
+    }
+  }
+
+  useEffect(() => {
+    sendSocket()
+  }, [lang, prompt])
+
   const editorDidMount: EditorDidMount = (editor:any) => {
     MonacoServices.install(monaco as any);
     if (editor && editor.getModel()) {
@@ -72,18 +82,18 @@ const PromptEditor: React.FC<Props> = (Props) => {
     }
     editor.focus();
   };
+
   const onChange = (value: string, event: monaco.editor.IModelContentChangedEvent) => {
-    Props.setPrompt(value)
+    setPrompt(value)
   };
   
   return (
     <>
-      {/* <div className="box"> */}
         <MonacoEditor className="monacoEditor"
-          value={Props.prompt}
+          value={prompt}
           width="100%"
           height="80vh"
-          language={Props.lang}
+          language={lang}
           theme="vs"
           options={MONACO_OPTIONS}
           onChange={onChange}
