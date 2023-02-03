@@ -13,11 +13,7 @@ import { GithubOutlined } from '@ant-design/icons'
 import './Home.css'
 const { Option } = Select
 
-interface IHomeProps {
-  socket: any
-}
-
-export default function Home(Props: IHomeProps) {
+export default function Home() {
   const [currentToken, setCurrentToken] = useState({
     api_key: ""
   })
@@ -135,7 +131,7 @@ export default function Home(Props: IHomeProps) {
       <div className="main">
         <div className="leftContainer">
           <div className="editors">
-            <PromptEditor {...{setPrompt}} prompt={prompt} lang={lang} socket={Props.socket} />
+            <PromptEditor {...{setPrompt}} prompt={prompt} lang={lang} />
             <Display result={result} />            
           </div>
           <div className="mainPanel">

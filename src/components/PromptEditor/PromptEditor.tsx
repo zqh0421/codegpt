@@ -8,6 +8,8 @@ import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 // import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 
+import { io } from "socket.io-client"
+
 self.MonacoEnvironment = {
   getWorker(_, label) {
     // if (label === 'json') {
@@ -29,12 +31,12 @@ self.MonacoEnvironment = {
 interface IPromptEditorProps {
   prompt: string,
   setPrompt: Function;
-  lang: string,
-  socket: any
+  lang: string
 }
 
 const PromptEditor: React.FC<IPromptEditorProps> = (Props) => {
-  const { prompt, setPrompt, lang, socket } = Props;
+  const { prompt, setPrompt, lang } = Props;
+  let socket:any = null
   const MONACO_OPTIONS: monaco.editor.IEditorOptions = {
     autoIndent: "full",
     automaticLayout: true,
@@ -62,19 +64,34 @@ const PromptEditor: React.FC<IPromptEditorProps> = (Props) => {
   
   const sendSocket = () => {
     if (lang == 'go') {
+      if (!socket) {
+        socket = io('http://localhost:7777')
+      } 
       socket.emit('golang-lsp', {
         prompt, lang
       })
+
+      socket.on('golang-lsp-response', (info: any) => {
+        console.log(`Received ${info}`)
+      })
+    } else {
+      // TODO: 切换语言时关闭go服务器
+      console.log("not go")
+      socket && socket.emit('disconnecting');
+      socket = null
     }
   }
 
   useEffect(() => {
     sendSocket()
-  }, [lang, prompt])
+  }, [prompt])
 
   const editorDidMount: EditorDidMount = (editor:any) => {
     MonacoServices.install(monaco as any);
     if (editor && editor.getModel()) {
+      editor.addCommand(monaco.KeyCode.KeyF, () => {
+        console.log("fff")
+      })
       const editorModel = editor.getModel();
       if (editorModel) {
         editorModel.setValue('{\n    "sayHello": "hello"\n}');
