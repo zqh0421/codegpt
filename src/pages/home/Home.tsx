@@ -13,6 +13,7 @@ import { GithubOutlined } from '@ant-design/icons'
 import './Home.css'
 const { Option } = Select
 
+
 export default function Home() {
   const [currentToken, setCurrentToken] = useState({
     api_key: ""
@@ -20,9 +21,11 @@ export default function Home() {
   const [prompt, setPrompt] = useState<string>("")
   const [lang, setLang] = useState<string>("")
   const [result, setResult] = useState<string>("")
+  const [editor, setEditor] = useState<any>()
   const [isEditVisible, setIsEditVisible] = useState<boolean>(false)
   const formRef = useRef<FormInstance>(null)
   const getCodeFormRef = useRef<FormInstance>(null)
+  const editorRef = useRef<any>(null)
   useEffect(() => {
     if (localStorage && localStorage.token) {
       setCurrentToken(JSON.parse(localStorage.token))
@@ -68,19 +71,6 @@ export default function Home() {
     )
   }]
 
-  const submit = () => {
-    formRef.current?.validateFields().then((val: any) => {
-      val = { ...val, prompt }
-      const res = request(currentToken.api_key, val)
-      .then(text => {
-        setResult(text)
-      })
-      // formRef.current?.resetFields()
-    }).catch((err: any) => {
-      console.log(err)
-    })
-  }
-
   const edit = () => {
     setIsEditVisible(true)
   }
@@ -122,8 +112,50 @@ export default function Home() {
   const handleLangChange = (value: string) => {
     setLang(value)
   }
-  const submitSelectedFunc = () => {
-    console.log('click')
+
+  const submit = () => {
+    formRef.current?.validateFields().then((val: any) => {
+      val = { ...val, prompt }
+      const res = request(currentToken.api_key, val)
+      .then(text => {
+        setResult(text)
+      })
+      // formRef.current?.resetFields()
+    }).catch((err: any) => {
+      console.log(err)
+    })
+  }
+
+  const submitSelection = () => {
+    console.log("select!!")
+    const selection = editorRef && editorRef.current && editorRef.current.getSelection(editor)
+    const { value } = selection
+    const { startLineNumber, startColumn, endLineNumber, endColumn } = selection.selection
+    const splitted = value.split(/\r\n|\n|\r/)
+    let selectedValue = ""
+    if (startLineNumber != endLineNumber) {
+      for (let i = startLineNumber - 1; i < endLineNumber; i++) {
+        if (i === startLineNumber - 1) {
+          selectedValue += splitted[i].slice(startColumn - 1) + '\n'
+        } else if (i === endLineNumber - 1) {
+          selectedValue += splitted[i].slice(0, endColumn - 1)
+        } else {
+          selectedValue += splitted[i] + '\n'
+        }
+      }
+    } else {
+      selectedValue = splitted[startLineNumber - 1].slice(startColumn - 1, endColumn - 1)
+    }
+    formRef.current?.validateFields().then((val: any) => {
+      val = { ...val, prompt: selectedValue }
+      const res = request(currentToken.api_key, val)
+      .then(text => {
+        setResult(text)
+      })
+      // formRef.current?.resetFields()
+    }).catch((err: any) => {
+      console.log(err)
+    })
   }
   return (
     localStorage && localStorage.token && <div className='homePage'>
@@ -131,13 +163,13 @@ export default function Home() {
       <div className="main">
         <div className="leftContainer">
           <div className="editors">
-            <PromptEditor {...{setPrompt}} prompt={prompt} lang={lang} />
+            <PromptEditor {...{setPrompt, setEditor}} prompt={prompt} lang={lang} ref={editorRef} />
             <Display result={result} />            
           </div>
           <div className="mainPanel">
             <div className="buttonPanel">
               <Button onClick={submit}>Submit All</Button>
-              <Button onClick={submitSelectedFunc}>Submit Selection</Button>
+              <Button onClick={submitSelection}>Submit Selection</Button>
               <Button onClick={edit}>Get Code<GithubOutlined /></Button>
             </div>
             <div className="langPanel">

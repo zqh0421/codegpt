@@ -21,6 +21,7 @@
     "react-monaco-editor": "^0.51.0",
     "socket.io-client": "^4.5.4",
     "vscode": "npm:@codingame/monaco-vscode-api@^1.69.15",
+    "vscode-languageserver": "^8.0.2",
     "vscode-ws-jsonrpc": "^2.0.2",
     "web-vitals": "^3.1.1",
     "ws": "^8.12.0"

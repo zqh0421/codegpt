@@ -1,14 +1,23 @@
-import React, { useEffect, useState } from 'react'
-import MonacoEditor, { EditorDidMount } from "react-monaco-editor";
+import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react'
+import MonacoEditor, { EditorDidMount, EditorWillMount } from "react-monaco-editor";
 import * as monaco from 'monaco-editor';
-import { MonacoServices } from "monaco-languageclient";
+import { listen } from 'vscode-ws-jsonrpc'
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 // import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
 // import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
 // import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
-
-import { io } from "socket.io-client"
+import {
+  MonacoLanguageClient,
+  MonacoServices,
+  CloseAction,
+  ErrorAction,
+  MessageTransports
+} from 'monaco-languageclient';import { toSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
+import { StandaloneServices } from 'vscode/services';
+import getMessageServiceOverride from 'vscode/service-override/messages';
+import { buildWorkerDefinition } from 'monaco-editor-workers';
+import normalizeUrl from 'normalize-url';
 
 self.MonacoEnvironment = {
   getWorker(_, label) {
@@ -30,13 +39,14 @@ self.MonacoEnvironment = {
 
 interface IPromptEditorProps {
   prompt: string,
-  setPrompt: Function;
-  lang: string
+  setPrompt: Function,
+  setEditor: Function,
+  lang: string,
 }
 
-const PromptEditor: React.FC<IPromptEditorProps> = (Props) => {
+const PromptEditor: React.FC<IPromptEditorProps> = forwardRef((Props, ref) => {
+  let cureditor: any
   const { prompt, setPrompt, lang } = Props;
-  let socket:any = null
   const MONACO_OPTIONS: monaco.editor.IEditorOptions = {
     autoIndent: "full",
     automaticLayout: true,
@@ -62,62 +72,126 @@ const PromptEditor: React.FC<IPromptEditorProps> = (Props) => {
     },
   };
   
-  const sendSocket = () => {
-    if (lang == 'go') {
-      if (!socket) {
-        socket = io('http://localhost:7777')
-      } 
-      socket.emit('golang-lsp', {
-        prompt, lang
-      })
+  // const sendSocket = () => {
+  //   if (lang == 'go') {
+  //     if (!socket) {
+  //       socket = io('http://localhost:7777')
+  //     } 
+  //     socket.emit('golang-lsp', {
+  //       prompt, lang
+  //     })
 
-      socket.on('golang-lsp-response', (info: any) => {
-        console.log(`Received ${info}`)
-      })
-    } else {
-      // TODO: 切换语言时关闭go服务器
-      console.log("not go")
-      socket && socket.emit('disconnecting');
-      socket = null
-    }
+  //     socket.on('golang-lsp-response', (info: any) => {
+  //       console.log(`Received ${info}`)
+  //     })
+  //   } else {
+  //     // TODO: 切换语言时关闭go服务器
+  //     console.log("not go")
+  //     socket && socket.emit('disconnecting');
+  //     socket = null
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   sendSocket()
+  // }, [prompt])
+  useEffect(() => {
+    Props.setEditor(cureditor)
+  }, [cureditor])
+
+  function createLanguageClient(transports: MessageTransports): MonacoLanguageClient {
+    return new MonacoLanguageClient({
+      name: 'Monaco language client',
+      clientOptions: {
+        documentSelector: ['go'],
+        errorHandler: {
+          error: () => ({ action: ErrorAction.Continue }),
+          closed: () => ({ action: CloseAction.DoNotRestart })
+        },
+      },
+      connectionProvider: {
+        get: () => {
+          return Promise.resolve(transports);
+        },
+      },
+    });
   }
 
-  useEffect(() => {
-    sendSocket()
-  }, [prompt])
+  const editorWillMount: EditorWillMount = (editor: any) => {
+    StandaloneServices.initialize({
+      ...getMessageServiceOverride(document.body)
+    });
+    // buildWorkerDefinition('dist', new URL('', window.location.href).href, false);
+  }
 
   const editorDidMount: EditorDidMount = (editor:any) => {
+    // install Monaco language client services
     MonacoServices.install(monaco as any);
-    if (editor && editor.getModel()) {
-      editor.addCommand(monaco.KeyCode.KeyF, () => {
-        console.log("fff")
-      })
-      const editorModel = editor.getModel();
-      if (editorModel) {
-        editorModel.setValue('{\n    "sayHello": "hello"\n}');
-      }
-    }
-    editor.focus();
+    // hardcoded socket URL
+    const url = createUrl('localhost', 8999, '/index.html/sampleServer');
+    const webSocket = new WebSocket(url);
+
+    // listen when the web socket is opened
+    webSocket.onopen = () => {
+      const socket = toSocket(webSocket)
+      const reader = new WebSocketMessageReader(socket)
+      const writer = new WebSocketMessageWriter(socket)
+      const languageClient = createLanguageClient({
+          reader,
+          writer
+      });
+      languageClient.start();
+      reader.onClose(() => languageClient.stop());
+    };
+    cureditor = editor
+    //   const editorModel = editor.getModel();
+    //   if (editorModel) {
+    //     editorModel.setValue('{\n    "sayHello": "hello"\n}');
+    //   }
+    // }
+    // editor.focus();
+    // editor.onMouseLeave(function (e: any) {
+    //   console.log({
+    //     selection: editor.getSelection(),
+    //     selectedValue: editor.getValue(editor.getSelection())
+    //   })
+    // })
   };
 
   const onChange = (value: string, event: monaco.editor.IModelContentChangedEvent) => {
     setPrompt(value)
   };
+
+  function createUrl(hostname: string, port: number, path: string): string {
+    const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
+    return normalizeUrl(`${protocol}://${hostname}:${port}${path}`);
+  }
   
+  useImperativeHandle(ref, () => ({
+      getSelection(editor: any) {
+        return {
+          selection: editor.getSelection(),
+          value: editor.getValue(editor.getSelection())
+        }
+      },
+    })
+  )
   return (
     <>
-        <MonacoEditor className="monacoEditor"
-          value={prompt}
-          width="100%"
-          height="80vh"
-          language={lang}
-          theme="vs"
-          options={MONACO_OPTIONS}
-          onChange={onChange}
-          editorDidMount={editorDidMount}
-        />
+      <MonacoEditor
+        className="monacoEditor"
+        value={prompt}
+        width="100%"
+        height="80vh"
+        language={lang}
+        theme="vs"
+        options={MONACO_OPTIONS}
+        onChange={onChange}
+        editorDidMount={editorDidMount}
+        editorWillMount={editorWillMount}
+      />
     </>
   )
-}
+})
 
 export default PromptEditor;

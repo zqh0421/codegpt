@@ -9,7 +9,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/codegpt_test" element={localStorage?.token ? <Home /> : <Login/>} />
+        <Route path="/codegpt_test" element={localStorage?.token ? <Home/> : <Login/>} />
         <Route path="/*" element={<NoPermission/>} />
       </Routes>
     </BrowserRouter>
