@@ -25,7 +25,6 @@ export default function Home() {
   const [isEditVisible, setIsEditVisible] = useState<boolean>(false)
   const formRef = useRef<FormInstance>(null)
   const getCodeFormRef = useRef<FormInstance>(null)
-  const editorRef = useRef<any>(null)
   useEffect(() => {
     if (localStorage && localStorage.token) {
       setCurrentToken(JSON.parse(localStorage.token))
@@ -125,10 +124,17 @@ export default function Home() {
       console.log(err)
     })
   }
+  
+  const getSelection = (editor: any) => {
+    return {
+      selection: editor.getSelection(),
+      value: editor.getValue(editor.getSelection())
+    }
+  }
 
   const submitSelection = () => {
     console.log("select!!")
-    const selection = editorRef && editorRef.current && editorRef.current.getSelection(editor)
+    const selection = getSelection(editor)
     const { value } = selection
     const { startLineNumber, startColumn, endLineNumber, endColumn } = selection.selection
     const splitted = value.split(/\r\n|\n|\r/)
@@ -163,7 +169,7 @@ export default function Home() {
       <div className="main">
         <div className="leftContainer">
           <div className="editors">
-            <PromptEditor {...{setPrompt, setEditor}} prompt={prompt} lang={lang} ref={editorRef} />
+            <PromptEditor {...{setPrompt, setEditor}} prompt={prompt} lang={lang} />
             <Display result={result} />            
           </div>
           <div className="mainPanel">

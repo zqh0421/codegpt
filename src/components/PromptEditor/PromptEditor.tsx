@@ -44,7 +44,8 @@ interface IPromptEditorProps {
   lang: string,
 }
 
-const PromptEditor: React.FC<IPromptEditorProps> = forwardRef((Props, ref) => {
+const PromptEditor: React.FC<IPromptEditorProps> = (Props) => {
+  let init = false
   let cureditor: any
   const { prompt, setPrompt, lang } = Props;
   const MONACO_OPTIONS: monaco.editor.IEditorOptions = {
@@ -128,10 +129,12 @@ const PromptEditor: React.FC<IPromptEditorProps> = forwardRef((Props, ref) => {
     // install Monaco language client services
     MonacoServices.install(monaco as any);
     // hardcoded socket URL
-    const url = createUrl('localhost', 8999, '/index.html/sampleServer');
+    const url = createUrl('localhost', 8999, '/server');
+    console.log(url)
     const webSocket = new WebSocket(url);
 
     // listen when the web socket is opened
+    let pingIntervel: number;
     webSocket.onopen = () => {
       const socket = toSocket(webSocket)
       const reader = new WebSocketMessageReader(socket)
@@ -140,10 +143,18 @@ const PromptEditor: React.FC<IPromptEditorProps> = forwardRef((Props, ref) => {
           reader,
           writer
       });
-      languageClient.start();
+      if (!init) {
+        languageClient.start();
+        console.log("test")
+        init = true
+      };
       reader.onClose(() => languageClient.stop());
-    };
-    cureditor = editor
+      pingIntervel = window.setInterval(() => {
+        socket.send("ping")
+        console.log("pong")
+      }, 5000)
+      }
+      cureditor = editor
     //   const editorModel = editor.getModel();
     //   if (editorModel) {
     //     editorModel.setValue('{\n    "sayHello": "hello"\n}');
@@ -166,16 +177,6 @@ const PromptEditor: React.FC<IPromptEditorProps> = forwardRef((Props, ref) => {
     const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
     return normalizeUrl(`${protocol}://${hostname}:${port}${path}`);
   }
-  
-  useImperativeHandle(ref, () => ({
-      getSelection(editor: any) {
-        return {
-          selection: editor.getSelection(),
-          value: editor.getValue(editor.getSelection())
-        }
-      },
-    })
-  )
   return (
     <>
       <MonacoEditor
@@ -192,6 +193,6 @@ const PromptEditor: React.FC<IPromptEditorProps> = forwardRef((Props, ref) => {
       />
     </>
   )
-})
+}
 
 export default PromptEditor;
