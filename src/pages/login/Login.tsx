@@ -14,7 +14,7 @@ const Login: React.FC = () => {
     window.location.reload()
   }
   return (
-    <div style={{ background: 'rgb(35, 39, 65)', height: "100%" }}>
+    <div style={{ background: 'rgb(35, 39, 65)', height: "100%" }} className="login">
       <div className="formContainer">
         <div className="login-title">Welcome to CodeGPT (test)</div>
         <Form // 表单

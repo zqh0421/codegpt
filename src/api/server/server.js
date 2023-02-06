@@ -17,11 +17,16 @@ const launch = (socket) => {
   const socketConnection = createConnection(reader, writer, () =>
     socket.dispose()
   );
+  // const serverConnection = createServerProcess(
+  //   'go',
+  //   process.env.GOPATH + "/bin/gopls",
+  //   ['-rpc.trace', 'serve']
+  // );
   const serverConnection = createServerProcess(
-    'Golang',
-    process.env.GOPATH + "/bin/gopls",
-    ['-rpc.trace', 'serve']
+    'python',
+    "pylsp"
   );
+  
   forward(socketConnection, serverConnection, (message) => {
     // console.log('server forward');
     // console.log(message)

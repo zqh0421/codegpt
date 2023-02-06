@@ -1,3 +1,17 @@
-.box {
-  background-color: blue;
+.promptEditorContainer {
+  height: 80vh;
+  border: #d9d9d9 1px solid;
+  border-radius: 6px;
+  padding: 4px 11px;
+  box-sizing: border-box;
+  transition: all 0.3s, height 0s, width 0s;
+}
+
+.promptEditorContainer:focus-within {
+  border-color: #4096ff;
+  box-shadow: 0 0 0 2px rgb(5 145 255 / 10%);
+}
+
+.promptEditorContainer:hover {
+  border-color: #4096ff;
 }

@@ -18,6 +18,7 @@ import { StandaloneServices } from 'vscode/services';
 import getMessageServiceOverride from 'vscode/service-override/messages';
 import { buildWorkerDefinition } from 'monaco-editor-workers';
 import normalizeUrl from 'normalize-url';
+import './PromptEditor.css'
 
 self.MonacoEnvironment = {
   getWorker(_, label) {
@@ -53,8 +54,8 @@ const PromptEditor: React.FC<IPromptEditorProps> = (Props) => {
     automaticLayout: true,
     contextmenu: true,
     fontFamily: "jetbrains mono",
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 10,
+    lineHeight: 16,
     hideCursorInOverviewRuler: true,
     matchBrackets: "always",
     quickSuggestions: true,
@@ -104,7 +105,7 @@ const PromptEditor: React.FC<IPromptEditorProps> = (Props) => {
     return new MonacoLanguageClient({
       name: 'Monaco language client',
       clientOptions: {
-        documentSelector: ['go'],
+        documentSelector: ['python'],
         errorHandler: {
           error: () => ({ action: ErrorAction.Continue }),
           closed: () => ({ action: CloseAction.DoNotRestart })
@@ -145,15 +146,15 @@ const PromptEditor: React.FC<IPromptEditorProps> = (Props) => {
       });
       if (!init) {
         languageClient.start();
-        console.log("test")
+        // console.log("test")
         init = true
       };
       reader.onClose(() => languageClient.stop());
-      pingIntervel = window.setInterval(() => {
-        socket.send("ping")
-        console.log("pong")
-      }, 5000)
-      }
+      // pingIntervel = window.setInterval(() => {
+      //   socket.send("ping")
+      //   console.log("pong")
+      // }, 5000)
+    }
       cureditor = editor
     //   const editorModel = editor.getModel();
     //   if (editorModel) {
@@ -178,12 +179,12 @@ const PromptEditor: React.FC<IPromptEditorProps> = (Props) => {
     return normalizeUrl(`${protocol}://${hostname}:${port}${path}`);
   }
   return (
-    <>
+    <div className="promptEditorContainer" >
       <MonacoEditor
         className="monacoEditor"
         value={prompt}
         width="100%"
-        height="80vh"
+        height="100%"
         language={lang}
         theme="vs"
         options={MONACO_OPTIONS}
@@ -191,7 +192,7 @@ const PromptEditor: React.FC<IPromptEditorProps> = (Props) => {
         editorDidMount={editorDidMount}
         editorWillMount={editorWillMount}
       />
-    </>
+    </div>
   )
 }
 

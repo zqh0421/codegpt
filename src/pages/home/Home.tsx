@@ -68,6 +68,17 @@ export default function Home() {
       '  console.log(fibonacci(i))\n'+
       '}'
     )
+  }, {
+    value: "python",
+    label: "Python",
+    default: (
+      'def fibonacci(n):\n'+
+      '    x, y = 0, 1\n'+
+      '    while(n):\n'+
+      '        x, y, n = y, x+y, n-1\n'+
+      '    return x\n'+
+      '\n'
+    )
   }]
 
   const edit = () => {
@@ -183,7 +194,7 @@ export default function Home() {
                 defaultValue="plaintext"
                 onChange={handleLangChange}
                 className="selectLang"
-                style={{ width: 120 }}
+                style={{ textAlign: 'center' }}
               >
                 {
                   langOptions.map(langOption => {

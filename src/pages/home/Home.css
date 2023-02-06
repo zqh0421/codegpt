@@ -24,17 +24,22 @@
   padding-left: 0;
 }
 
+.editors {
+  height: calc(100vh - 153px);
+}
+
 .mainPanel {
   display: flex;
   justify-content: space-between;
+  margin-top: 20px;
 }
 
 .buttonPanel > * {
   margin-right: 20px;
 }
 
-.editors {
-  max-height: 550px;
+.selectLang {
+  width: 120px;
 }
 
 @media (max-width: 800px) {
@@ -48,6 +53,10 @@
   .editors > *:first-child {
     margin-bottom: 20px;
   }
+  .promptEditorContainer, .displayArea {
+    width: 100%;
+    height: 50%;
+  }
 }
 @media (min-width: 800px) {
   .leftContainer .editors {
@@ -60,7 +69,12 @@
   .rightContainer {
     flex-basis: 180px;
   }
+  .promptEditorContainer, .displayArea {
+    width: 50%;
+    height: 100%;
+  }
 }
+
 @media (max-width: 600px) {
   .mainPanel {
     flex-direction: column;

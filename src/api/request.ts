@@ -36,7 +36,10 @@ export async function request(api_key : string, value : any) {
     const data = await response.json()
     console.log(data)
     console.log("Tokens: " + data.usage.completion_tokens)
-    return data.choices[0].text
+    if (model==="text-chat-davinci-002-20221122") {
+      return data.choices[0].text.split("<|im_end|>")[0].split("```").join().slice(2)
+    }
+    return data.choices[0].text.slice(2)
   } catch (err) {
     console.log(err)
   }

@@ -45,6 +45,12 @@
   color: #61dafb;
 }
 
+.mainPanel *, .configForm *, .displayArea *, .login * {
+  font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'Segoe UI', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif !important;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
