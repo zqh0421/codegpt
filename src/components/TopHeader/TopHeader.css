@@ -53,3 +53,10 @@
 .right .logOut:hover {
   color: #1890ff;
 }
+
+a {
+  text-decoration: none;
+}
+a, a:active {
+  color: rgba(0, 0, 0, 0.88);
+}

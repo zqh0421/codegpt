@@ -17,14 +17,10 @@ const launch = (socket) => {
   const socketConnection = createConnection(reader, writer, () =>
     socket.dispose()
   );
-  // const serverConnection = createServerProcess(
-  //   'go',
-  //   process.env.GOPATH + "/bin/gopls",
-  //   ['-rpc.trace', 'serve']
-  // );
   const serverConnection = createServerProcess(
-    'python',
-    "pylsp"
+    'go',
+    process.env.GOPATH + "/bin/gopls",
+    ['-rpc.trace', 'serve']
   );
   
   forward(socketConnection, serverConnection, (message) => {
@@ -32,16 +28,16 @@ const launch = (socket) => {
     // console.log(message)
     // console.log(message.params.capabilities)
     if (Message.isRequest(message)) {
-      console.log("request")
+      // console.log("request")
       // console.log(message.method)
       if ((message.method === lsp.InitializeRequest.type.method)) {
         const initializeParams = message.params;
         initializeParams.processId = process.pid;
-        console.log("params")
-        console.log(initializeParams)
+        // console.log("params")
+        // console.log(initializeParams)
       }
     } else if (Message.isNotification(message)) {
-      console.log("notification")
+      // console.log("notification")
     }
     return message;
   });
@@ -63,13 +59,15 @@ server.on('upgrade', (request, socket, head) => {
   if (pathname === SOCKETPATH) {
     wss.handleUpgrade(request, socket, head, (webSocket) => {
       const socket = {
-        send: (content) =>
+        send: ((content) => {
           webSocket.send(content, (error) => {
             console.log("send")
+            console.log(content)
             if (error) {
               throw error;
             }
-          }),
+          })
+        }),
         onMessage: (cb) => webSocket.on('message', cb),
         onError: (cb) => webSocket.on('error', () => {cb}),
         onClose: (cb) => webSocket.on('close', cb),

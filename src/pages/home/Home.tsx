@@ -7,10 +7,14 @@ import PromptEditor from '../../components/PromptEditor/PromptEditor'
 import Display from '../../components/Display/Display'
 import GetCodeForm from '../../components/GetCodeForm/GetCodeFrom'
 import { request } from '../../api/request'
-import getCode from '../../api/getCode'
-import { IGetCodeProps } from "../../utils/interfaces";
+// import { getCode } from '../../api/getCode'
+import { buildFileTree } from '../../api/getFileTreeFromGithub'
+// import { IGetCodeProps } from "../../utils/interfaces";
 import { GithubOutlined } from '@ant-design/icons'
 import './Home.css'
+import NewEditor from '../../components/PromptEditor/NewEditor'
+import SideBar from '../../components/FileTree/FileTree'
+import type { FileNode } from '../../api/getFileTreeFromGithub';
 const { Option } = Select
 
 
@@ -22,6 +26,7 @@ export default function Home() {
   const [lang, setLang] = useState<string>("")
   const [result, setResult] = useState<string>("")
   const [editor, setEditor] = useState<any>()
+  const [treeData, setTreeData] = useState<Array<FileNode>>(new Array<FileNode>())
   const [isEditVisible, setIsEditVisible] = useState<boolean>(false)
   const formRef = useRef<FormInstance>(null)
   const getCodeFormRef = useRef<FormInstance>(null)
@@ -35,7 +40,8 @@ export default function Home() {
     value: "plaintext",
     label: 'Plain Text',
     default: 'Print "Hello World" using TypeScript and Go respectilvely.'
-  }, {
+  },
+  {
     value: "go",
     label: "Go",
     default: (
@@ -68,35 +74,41 @@ export default function Home() {
       '  console.log(fibonacci(i))\n'+
       '}'
     )
-  }, {
-    value: "python",
-    label: "Python",
-    default: (
-      'def fibonacci(n):\n'+
-      '    x, y = 0, 1\n'+
-      '    while(n):\n'+
-      '        x, y, n = y, x+y, n-1\n'+
-      '    return x\n'+
-      '\n'
-    )
-  }]
+  },
+  ]
 
   const edit = () => {
     setIsEditVisible(true)
+    buildFileTree({
+      token: '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',
+      owner: 'zqh0421',
+      repo: 'codegpt_test',
+      filePath: '',
+      branchName: 'vite-version'
+    }).then(res => {
+      if (res.length) {
+        setTreeData(res)
+        console.log(res)
+      }
+    }).catch(err => {
+      console.error(err)
+      console.error("ERROR: Configuration is wrong or API rate limit exceeded. Check out the GitHub API documentation for more details.")
+    })
+    
   }
 
-  const getCodeFormOk = () => {
-    getCodeFormRef.current?.validateFields().then((value: IGetCodeProps) => {
-      setIsEditVisible(false)
-      getCodeFormRef.current?.resetFields()
-      getCode(value).then(code => {
-        setPrompt(code)
-      })
+  // const getCodeFormOk = () => {
+  //   getCodeFormRef.current?.validateFields().then((value: IGetCodeProps) => {
+  //     setIsEditVisible(false)
+  //     getCodeFormRef.current?.resetFields()
+  //     // getCode(value).then(code => {
+  //     //   setPrompt(code || "")
+  //     // })
       
-    }).catch((err: any) => {
-        console.log(err)
-    })
-  }
+  //   }).catch((err: any) => {
+  //       console.error(err)
+  //   })
+  // }
   // useEffect(() => {
   //   console.log(prompt)
   // }, [prompt])
@@ -132,7 +144,7 @@ export default function Home() {
       })
       // formRef.current?.resetFields()
     }).catch((err: any) => {
-      console.log(err)
+      console.error(err)
     })
   }
   
@@ -171,7 +183,7 @@ export default function Home() {
       })
       // formRef.current?.resetFields()
     }).catch((err: any) => {
-      console.log(err)
+      console.error(err)
     })
   }
   return (
@@ -180,7 +192,9 @@ export default function Home() {
       <div className="main">
         <div className="leftContainer">
           <div className="editors">
+            {/* <SideBar treeData={treeData} /> */}
             <PromptEditor {...{setPrompt, setEditor}} prompt={prompt} lang={lang} />
+            {/* <NewEditor {...{setPrompt, setEditor}} prompt={prompt} lang={lang} /> */}
             <Display result={result} />            
           </div>
           <div className="mainPanel">
@@ -219,7 +233,7 @@ export default function Home() {
           onCancel={()=>{
               setIsEditVisible(false)
           }}
-          onOk={() => getCodeFormOk()}
+          // onOk={() => getCodeFormOk()}
       >
           <GetCodeForm ref={getCodeFormRef} />
       </Modal>

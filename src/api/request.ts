@@ -8,6 +8,7 @@ export async function request(api_key : string, value : any) {
       case "Optimize": return "Optimize the following code if there is anything to improve, add some notes explaining how you optimized: "
       case "Find Problems": return "Find problems with the following code, fix them and explain what was wrong (Do not change anything else, if there are no problems say so): "
       case "Documentation": return "Write documentation for the following code: "
+      case "Optimize Selected Func": return "Based on its context, please optimize the function located on the 10th line."
       default: return ""
     }
   }

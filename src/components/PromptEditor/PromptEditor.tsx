@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react'
 import MonacoEditor, { EditorDidMount, EditorWillMount } from "react-monaco-editor";
 import * as monaco from 'monaco-editor';
-import { listen } from 'vscode-ws-jsonrpc'
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 // import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
 // import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
@@ -74,29 +73,6 @@ const PromptEditor: React.FC<IPromptEditorProps> = (Props) => {
     },
   };
   
-  // const sendSocket = () => {
-  //   if (lang == 'go') {
-  //     if (!socket) {
-  //       socket = io('http://localhost:7777')
-  //     } 
-  //     socket.emit('golang-lsp', {
-  //       prompt, lang
-  //     })
-
-  //     socket.on('golang-lsp-response', (info: any) => {
-  //       console.log(`Received ${info}`)
-  //     })
-  //   } else {
-  //     // TODO: 切换语言时关闭go服务器
-  //     console.log("not go")
-  //     socket && socket.emit('disconnecting');
-  //     socket = null
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   sendSocket()
-  // }, [prompt])
   useEffect(() => {
     Props.setEditor(cureditor)
   }, [cureditor])
@@ -105,7 +81,7 @@ const PromptEditor: React.FC<IPromptEditorProps> = (Props) => {
     return new MonacoLanguageClient({
       name: 'Monaco language client',
       clientOptions: {
-        documentSelector: ['python'],
+        documentSelector: ['go'],
         errorHandler: {
           error: () => ({ action: ErrorAction.Continue }),
           closed: () => ({ action: CloseAction.DoNotRestart })
@@ -119,6 +95,13 @@ const PromptEditor: React.FC<IPromptEditorProps> = (Props) => {
     });
   }
 
+  useEffect(() => {
+    console.log("effect")
+    monaco.editor.getModels().forEach((model: monaco.editor.ITextModel) => {
+      console.log(model)
+    })
+  }, [lang])
+
   const editorWillMount: EditorWillMount = (editor: any) => {
     StandaloneServices.initialize({
       ...getMessageServiceOverride(document.body)
@@ -127,11 +110,22 @@ const PromptEditor: React.FC<IPromptEditorProps> = (Props) => {
   }
 
   const editorDidMount: EditorDidMount = (editor:any) => {
+    if (!init) {
+      monaco.editor.getModels().forEach((model: monaco.editor.ITextModel) => {
+        // console.log(model)
+        model.dispose()
+      })
+      const model = monaco.editor.createModel(
+        prompt !== null ? prompt : "",
+        lang,
+        monaco.Uri.parse("file:///F:/model/code.go")
+      )
+      editor.setModel(model)
+    }
     // install Monaco language client services
     MonacoServices.install(monaco as any);
     // hardcoded socket URL
-    const url = createUrl('localhost', 8999, '/server');
-    console.log(url)
+    const url = createUrl('localhost', 8999, '/server'); /// localhost 47.93.8.246
     const webSocket = new WebSocket(url);
 
     // listen when the web socket is opened
@@ -142,7 +136,7 @@ const PromptEditor: React.FC<IPromptEditorProps> = (Props) => {
       const writer = new WebSocketMessageWriter(socket)
       const languageClient = createLanguageClient({
           reader,
-          writer
+          writer,
       });
       if (!init) {
         languageClient.start();
@@ -156,6 +150,7 @@ const PromptEditor: React.FC<IPromptEditorProps> = (Props) => {
       // }, 5000)
     }
       cureditor = editor
+      
     //   const editorModel = editor.getModel();
     //   if (editorModel) {
     //     editorModel.setValue('{\n    "sayHello": "hello"\n}');
