@@ -31,7 +31,7 @@ const TopHeader: React.FC = () => {
     <>
       <Header className="header">
       <div className="left">
-          <p className='topTitle'><a href='https://github.com/zqh0421/codegpt_test/' target="_blank">CodeGPT</a></p>
+          <p className='topTitle'><a href='https://github.com/zqh0421/codegpt/' target="_blank">CodeGPT</a></p>
         </div>
         <div className="right">
           <p className='info'>Welcome! The last 4 digits of of your API-KEY: {currentToken.api_key.substring(currentToken.api_key.length-4)}</p>

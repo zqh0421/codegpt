@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 export default function NoPermission() {
   let navigate = useNavigate()
   useEffect(() => {
-    navigate('/codegpt_test')
+    navigate('/codegpt')
   }, [])
 
   return (

@@ -11,7 +11,7 @@ const GetCodeForm = React.forwardRef<FormInstance>((props, ref) => {
       initialValues={{
         "token": "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",
         "owner": "zqh0421",
-        "repo": "codegpt_test",
+        "repo": "codegpt",
         "filePath": "src/App.tsx",
         "branchName": ""
       }}

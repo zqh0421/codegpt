@@ -82,7 +82,7 @@ export default function Home() {
     buildFileTree({
       token: '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',
       owner: 'zqh0421',
-      repo: 'codegpt_test',
+      repo: 'codegpt',
       filePath: '',
       branchName: 'vite-version'
     }).then(res => {
