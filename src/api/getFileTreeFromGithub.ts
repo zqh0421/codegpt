@@ -1,4 +1,4 @@
-// import { Base64 } from 'js-base64'
+import { Base64 } from 'js-base64'
 // import type { DataNode } from 'antd/es/tree';
 // import fs from 'fs'
 

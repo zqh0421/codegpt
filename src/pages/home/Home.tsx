@@ -12,8 +12,8 @@ import { request } from '../../api/request'
 // import { IGetCodeProps } from "../../utils/interfaces";
 import { GithubOutlined } from '@ant-design/icons'
 import './Home.css'
-import NewEditor from '../../components/PromptEditor/NewEditor'
-import SideBar from '../../components/FileTree/FileTree'
+// import NewEditor from '../../components/PromptEditor/NewEditor'
+// import SideBar from '../../components/FileTree/FileTree'
 // import type { FileNode } from '../../api/getFileTreeFromGithub';
 const { Option } = Select
 
@@ -26,7 +26,7 @@ export default function Home() {
   const [lang, setLang] = useState<string>("")
   const [result, setResult] = useState<string>("")
   const [editor, setEditor] = useState<any>()
-  const [treeData, setTreeData] = useState<Array<FileNode>>(new Array<FileNode>())
+  // const [treeData, setTreeData] = useState<Array<FileNode>>(new Array<FileNode>())
   const [isEditVisible, setIsEditVisible] = useState<boolean>(false)
   const formRef = useRef<FormInstance>(null)
   const getCodeFormRef = useRef<FormInstance>(null)
@@ -79,22 +79,21 @@ export default function Home() {
 
   const edit = () => {
     setIsEditVisible(true)
-    buildFileTree({
-      token: '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',
-      owner: 'zqh0421',
-      repo: 'codegpt',
-      filePath: '',
-      branchName: 'vite-version'
-    }).then(res => {
-      if (res.length) {
-        setTreeData(res)
-        console.log(res)
-      }
-    }).catch(err => {
-      console.error(err)
-      console.error("ERROR: Configuration is wrong or API rate limit exceeded. Check out the GitHub API documentation for more details.")
-    })
-    
+    // buildFileTree({
+    //   token: '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',
+    //   owner: 'zqh0421',
+    //   repo: 'codegpt',
+    //   filePath: '',
+    //   branchName: 'vite-version'
+    // }).then(res => {
+    //   if (res.length) {
+    //     setTreeData(res)
+    //     console.log(res)
+    //   }
+    // }).catch(err => {
+    //   console.error(err)
+    //   console.error("ERROR: Configuration is wrong or API rate limit exceeded. Check out the GitHub API documentation for more details.")
+    // })
   }
 
   // const getCodeFormOk = () => {
