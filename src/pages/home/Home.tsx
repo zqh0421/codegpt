@@ -8,13 +8,13 @@ import Display from '../../components/Display/Display'
 import GetCodeForm from '../../components/GetCodeForm/GetCodeFrom'
 import { request } from '../../api/request'
 // import { getCode } from '../../api/getCode'
-import { buildFileTree } from '../../api/getFileTreeFromGithub'
+// import { buildFileTree } from '../../api/getFileTreeFromGithub'
 // import { IGetCodeProps } from "../../utils/interfaces";
 import { GithubOutlined } from '@ant-design/icons'
 import './Home.css'
 import NewEditor from '../../components/PromptEditor/NewEditor'
 import SideBar from '../../components/FileTree/FileTree'
-import type { FileNode } from '../../api/getFileTreeFromGithub';
+// import type { FileNode } from '../../api/getFileTreeFromGithub';
 const { Option } = Select
 
 
